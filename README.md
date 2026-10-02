@@ -4,7 +4,7 @@
 
 ## 文件说明
 
-项目按功能分为 `src/`（核心代码）、`scripts/`（Windows 启动/授权/定时任务脚本）和 `config/`（配置模板）；运行时生成的 `data/`、`logs/`、`secrets/` 不提交到 Git。
+项目按功能分为 `src/`（核心代码）、`scripts/`（Windows 启动/授权/定时任务脚本）和 `config/`（配置模板）；每个目录内都有自己的说明文件。运行时生成的 `data/`、`logs/`、`secrets/` 不提交到 Git。
 
 | 文件 | 用途 |
 | --- | --- |
@@ -23,6 +23,20 @@
 | `scripts/authorize-gmail-hidden.vbs` | 隐藏窗口启动 Gmail 授权流程。 |
 | `.gitignore` | 防止配置密钥、OAuth 文件、候选人资料、数据库和日志被提交。 |
 | `README.md` | 项目说明、安装配置和使用方法。 |
+| `src/README.md` | 核心 Python 文件和调用方式说明。 |
+| `scripts/README.md` | Windows 脚本、授权入口和计划任务说明。 |
+| `config/README.md` | 配置模板、密钥位置和本机配置说明。 |
+
+### 目录说明
+
+| 目录 | 用途 | 是否提交 |
+| --- | --- | --- |
+| `src/` | Gmail、飞书、简历解析和面试调度核心代码。 | 是 |
+| `scripts/` | Windows PowerShell/VBS 启动与定时任务脚本。 | 是 |
+| `config/` | 不含真实密钥的配置模板。 | 是 |
+| `data/` | 本地 SQLite 数据库和同步状态。 | 否 |
+| `logs/` | 本地运行日志。 | 否 |
+| `secrets/` | Gmail OAuth 文件和令牌。 | 否 |
 
 ### 常用入口
 
