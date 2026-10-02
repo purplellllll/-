@@ -1,0 +1,17 @@
+# Local secrets and personal data
+config.json
+secrets/
+data/
+logs/
+__pycache__/
+.venv/
+tmp/
+.tmp_resume_review/
+
+# Local resume/test artifacts
+*.doc
+*.docx
+*.pdf
+*.png
+*.jpg
+*.jpeg

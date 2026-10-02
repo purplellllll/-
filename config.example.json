@@ -1,0 +1,92 @@
+{
+  "gmail": {
+    "account_email": "recruiting@example.com",
+    "client_secret_file": "secrets/gmail-client.json",
+    "token_file": "data/gmail-token.json",
+    "source_label": "招聘/待同步",
+    "max_messages_per_run": 25
+  },
+  "feishu": {
+    "app_id": "cli_xxxxxxxxxxxxxxxx",
+    "app_secret": "replace-with-your-app-secret",
+    "spreadsheet_token": "replace-with-feishu-spreadsheet-token",
+    "sheet_id": "",
+    "fields": {
+      "serial": "序号",
+      "name": "姓名",
+      "student_id": "学号",
+      "email": "邮箱",
+      "phone": "电话",
+      "major": "专业",
+      "group": "应聘组别",
+      "interview_link": "面试链接",
+      "resume_original": "简历原件"
+    },
+    "resume_archive": {
+      "enabled": false,
+      "folder_name": "招新简历原件",
+      "folder_token": "replace-with-shared-feishu-folder-token",
+      "file_url_base": "https://your-tenant.feishu.cn"
+    }
+  },
+  "interview": {
+    "enabled": false,
+    "send_resume_with_invitation": true,
+    "resume_reviewer": {
+      "open_id": "",
+      "name": ""
+    },
+    "recipient_group": {
+      "chat_id": "",
+      "name": "【广研内部】项目讨论群"
+    },
+    "interviewers": [
+      {
+        "name": "面试官甲",
+        "email": "interviewer-a@example.com"
+      },
+      {
+        "name": "面试官乙",
+        "email": "interviewer-b@example.com"
+      }
+    ],
+    "duration_minutes": 60,
+    "time_windows": [
+      {
+        "start": "2026-08-03 00:00",
+        "end": "2026-12-31 12:00"
+      }
+    ],
+    "candidate_notice": {
+      "organization": "你的组织或实验室名称",
+      "contact_name": "联系人姓名",
+      "contact_qq": "联系人QQ",
+      "contact_email": "contact@example.com",
+      "meeting_mode": "视频面试",
+      "meeting_location": "线上面试",
+      "meeting_hint": "请使用腾讯会议电脑客户端进行面试/笔试",
+      "review_required": true
+    },
+    "fields": {
+      "scheduled_at": "面试时间",
+      "status": "面试状态",
+      "interviewer": "面试官"
+    }
+  },
+  "llm": {
+    "enabled": false,
+    "base_url": "http://127.0.0.1:11434/v1",
+    "model": "",
+    "api_key_env": "",
+    "timeout_seconds": 45,
+    "max_input_characters": 12000
+  },
+  "backup": {
+    "enabled": true,
+    "directory": "data/candidate-backups"
+  },
+  "runtime": {
+    "database_file": "data/sync-state.db",
+    "log_file": "logs/sync.log"
+  }
+}
