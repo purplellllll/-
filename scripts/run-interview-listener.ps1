@@ -1,5 +1,5 @@
 $ErrorActionPreference = 'Stop'
-$ProjectRoot = $PSScriptRoot
+$ProjectRoot = Split-Path $PSScriptRoot -Parent
 $PythonCandidates = @(
     (Join-Path $ProjectRoot '.venv\Scripts\python.exe'),
     $env:PYTHON_EXE,
@@ -21,5 +21,5 @@ if (-not $Python) {
     throw 'Python 3.10+ was not found. Set PYTHON_EXE or install Python, then run again.'
 }
 
-& $Python (Join-Path $ProjectRoot 'interview_scheduler.py') listen --config (Join-Path $ProjectRoot 'config.json')
+& $Python (Join-Path $ProjectRoot 'src\interview_scheduler.py') listen --config (Join-Path $ProjectRoot 'config.json')
 exit $LASTEXITCODE

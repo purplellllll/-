@@ -5,7 +5,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
-$ProjectRoot = $PSScriptRoot
+$ProjectRoot = Split-Path $PSScriptRoot -Parent
 $PythonCandidates = @(
     (Join-Path $ProjectRoot '.venv\Scripts\python.exe'),
     $env:PYTHON_EXE,
@@ -27,5 +27,5 @@ if (-not $Python) {
     throw 'Python 3.10+ was not found. Set PYTHON_EXE or install Python, then run again.'
 }
 
-& $Python (Join-Path $ProjectRoot 'recruitment_sync.py') $Command --config (Join-Path $ProjectRoot 'config.json')
+& $Python (Join-Path $ProjectRoot 'src\recruitment_sync.py') $Command --config (Join-Path $ProjectRoot 'config.json')
 exit $LASTEXITCODE

@@ -4,21 +4,23 @@
 
 ## 文件说明
 
+项目按功能分为 `src/`（核心代码）、`scripts/`（Windows 启动/授权/定时任务脚本）和 `config/`（配置模板）；运行时生成的 `data/`、`logs/`、`secrets/` 不提交到 Git。
+
 | 文件 | 用途 |
 | --- | --- |
-| `recruitment_sync.py` | 核心同步程序：读取 Gmail 简历、解析候选人信息、写入飞书表格、发送 Offer 邮件和审核卡片。 |
-| `interview_scheduler.py` | 面试调度程序：分配面试官、发送面试时间确认卡片、接收确认结果并回写表格。 |
-| `config.example.json` | 配置模板。复制为 `config.json` 后填写 Gmail、飞书和面试相关配置。 |
+| `src/recruitment_sync.py` | 核心同步程序：读取 Gmail 简历、解析候选人信息、写入飞书表格、发送 Offer 邮件和审核卡片。 |
+| `src/interview_scheduler.py` | 面试调度程序：分配面试官、发送面试时间确认卡片、接收确认结果并回写表格。 |
+| `config/config.example.json` | 配置模板。复制为根目录的 `config.json` 后填写 Gmail、飞书和面试相关配置。 |
 | `requirements.txt` | Python 依赖列表。 |
-| `run.ps1` | 主入口，用于授权 Gmail、检查连接、同步简历和发送通知。 |
-| `install-schedule.ps1` | 安装定时同步任务。 |
-| `install-interview-listener.ps1` | 安装飞书面试卡片监听服务。 |
-| `install-interview-notice-schedule.ps1` | 安装面试通知扫描定时任务。 |
-| `run-hidden.vbs` | 隐藏窗口运行简历同步，供定时任务调用。 |
-| `run-interview-listener.ps1` | 启动飞书面试卡片监听服务。 |
-| `run-interview-listener-hidden.vbs` | 隐藏窗口启动面试监听服务。 |
-| `run-interview-notices-hidden.vbs` | 隐藏窗口启动面试通知扫描。 |
-| `authorize-gmail-hidden.vbs` | 隐藏窗口启动 Gmail 授权流程。 |
+| `scripts/run.ps1` | 主入口，用于授权 Gmail、检查连接、同步简历和发送通知。 |
+| `scripts/install-schedule.ps1` | 安装定时同步任务。 |
+| `scripts/install-interview-listener.ps1` | 安装飞书面试卡片监听服务。 |
+| `scripts/install-interview-notice-schedule.ps1` | 安装面试通知扫描定时任务。 |
+| `scripts/run-hidden.vbs` | 隐藏窗口运行简历同步，供定时任务调用。 |
+| `scripts/run-interview-listener.ps1` | 启动飞书面试卡片监听服务。 |
+| `scripts/run-interview-listener-hidden.vbs` | 隐藏窗口启动面试监听服务。 |
+| `scripts/run-interview-notices-hidden.vbs` | 隐藏窗口启动面试通知扫描。 |
+| `scripts/authorize-gmail-hidden.vbs` | 隐藏窗口启动 Gmail 授权流程。 |
 | `.gitignore` | 防止配置密钥、OAuth 文件、候选人资料、数据库和日志被提交。 |
 | `README.md` | 项目说明、安装配置和使用方法。 |
 
@@ -26,19 +28,19 @@
 
 ```powershell
 # 首次授权 Gmail
-powershell -ExecutionPolicy Bypass -File .\run.ps1 authorize-gmail
+powershell -ExecutionPolicy Bypass -File .\scripts\run.ps1 authorize-gmail
 
 # 检查 Gmail 和飞书连接
-powershell -ExecutionPolicy Bypass -File .\run.ps1 check
+powershell -ExecutionPolicy Bypass -File .\scripts\run.ps1 check
 
 # 执行一次简历同步
-powershell -ExecutionPolicy Bypass -File .\run.ps1 sync
+powershell -ExecutionPolicy Bypass -File .\scripts\run.ps1 sync
 ```
 
 ## 一次性配置
 
 1. 将 Google Cloud 下载的 **Desktop app** OAuth JSON 放到 `secrets/gmail-client.json`。
-2. 复制 `config.example.json` 为 `config.json`，仅在本机填写飞书 App ID、App Secret、电子表格 token 和通知联系人信息。
+2. 复制 `config\config.example.json` 为根目录的 `config.json`，仅在本机填写飞书 App ID、App Secret、电子表格 token 和通知联系人信息。
 3. 在 Gmail 创建用户标签 `招聘/待同步`，并让招新邮件自动或手动打上该标签。
 4. 在飞书电子表格的首行创建下列列标题：`序号`、`姓名`、`学号`、`应聘组别`、`邮箱`、`电话`、`专业`、`面试时间`、`面试状态`、`面试官`、`面试链接`、`简历原件`。若实际列名不同，在 `config.json` 的 `feishu.fields` 和 `interview.fields` 中对应修改。`简历原件` 列也会在首次成功归档时自动创建。
 
@@ -46,8 +48,8 @@ powershell -ExecutionPolicy Bypass -File .\run.ps1 sync
 5. 使用 PowerShell 运行：
 
    ```powershell
-   powershell -ExecutionPolicy Bypass -File .\run.ps1 authorize-gmail
-   powershell -ExecutionPolicy Bypass -File .\run.ps1 check
+   powershell -ExecutionPolicy Bypass -File .\scripts\run.ps1 authorize-gmail
+   powershell -ExecutionPolicy Bypass -File .\scripts\run.ps1 check
    ```
 
 首次授权会打开浏览器；使用招新 Gmail 账号允许读取和发送邮件。`check` 会验证 Gmail 标签、飞书凭证和目标电子表格表头，不会写入数据。
@@ -55,8 +57,8 @@ powershell -ExecutionPolicy Bypass -File .\run.ps1 sync
 ## 运行
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\run.ps1 sync
-powershell -ExecutionPolicy Bypass -File .\run.ps1 status
+powershell -ExecutionPolicy Bypass -File .\scripts\run.ps1 sync
+powershell -ExecutionPolicy Bypass -File .\scripts\run.ps1 status
 ```
 
 ## 填写面试链接后的 Offer 审核与发送
@@ -70,16 +72,16 @@ powershell -ExecutionPolicy Bypass -File .\run.ps1 status
 同一候选人、同一邮箱、同一链接只发送一次；面试官修改链接后，程序会自动补发一封更新通知。需要立即扫描一次可手动运行：
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\run.ps1 send-interview-notices
+powershell -ExecutionPolicy Bypass -File .\scripts\run.ps1 send-interview-notices
 ```
 
 此前只授予“只读 Gmail”权限时，必须重新执行一次 `authorize-gmail` 并在浏览器中允许“发送邮件”，旧授权不会自动获得该权限：
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\run.ps1 authorize-gmail
+powershell -ExecutionPolicy Bypass -File .\scripts\run.ps1 authorize-gmail
 ```
 
-不想看到 PowerShell 窗口时，直接双击 `authorize-gmail-hidden.vbs`；浏览器仍会打开，完成授权后脚本会自行退出。
+不想看到 PowerShell 窗口时，直接双击 `scripts\authorize-gmail-hidden.vbs`；浏览器仍会打开，完成授权后脚本会自行退出。
 
 ## 飞书面试时间确认
 
@@ -101,7 +103,7 @@ powershell -ExecutionPolicy Bypass -File .\run.ps1 authorize-gmail
 
 ```powershell
 python -m pip install -r requirements.txt
-powershell -ExecutionPolicy Bypass -File .\install-interview-listener.ps1
+powershell -ExecutionPolicy Bypass -File .\scripts\install-interview-listener.ps1
 ```
 
 安装脚本优先创建隐藏计划任务；如果当前 Windows 账户不允许创建任务，则会自动改为当前用户的隐藏开机启动项。
@@ -109,13 +111,13 @@ powershell -ExecutionPolicy Bypass -File .\install-interview-listener.ps1
 把机器人首次拉入目标名单群后，它会自动绑定该群，并在群内发送完整流程和面试官操作说明；不需要发送任何命令。后续即使机器人又被拉入其他群，也不会覆盖已有绑定。之后所有邀请和时间确认都只在单聊里进行。确认 `time_windows` 已填写后，将 `interview.enabled` 改为 `true`，再运行：
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\run.ps1 dispatch-interviews
+powershell -ExecutionPolicy Bypass -File .\scripts\run.ps1 dispatch-interviews
 ```
 
 如需把当前已同步的测试简历也补发给名单群成员进行联调，运行：
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\run.ps1 queue-existing-interviews
+powershell -ExecutionPolicy Bypass -File .\scripts\run.ps1 queue-existing-interviews
 ```
 
 后续每封新简历会自动向被随机选中的面试官发送预约卡片和原始简历文件。卡片固定显示允许的年份，面试官只能选择卡片提供的月/日和时间，然后点击“确认面试时间”。默认会优先发送附件名中含“简历”、`resume` 或 `cv` 的 PDF、DOC、DOCX；若有多份符合文件则只发最符合的一份，单文件超过 30MB 会跳过并记录本地日志。此功能要求在飞书应用的“权限管理”中添加并发布 `im:resource`（获取与上传图片或文件资源）；如需关闭它，可在 `config.json` 将 `interview.send_resume_with_invitation` 设为 `false`。
@@ -129,7 +131,7 @@ powershell -ExecutionPolicy Bypass -File .\run.ps1 queue-existing-interviews
 安装每两分钟自动运行一次的 Windows 任务：
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\install-schedule.ps1 -Minutes 2
+powershell -ExecutionPolicy Bypass -File .\scripts\install-schedule.ps1 -Minutes 2
 ```
 
 取消自动任务：
@@ -156,7 +158,7 @@ Unregister-ScheduledTask -TaskName 'Recruitment Gmail to Feishu Sync' -Confirm:$
 配置完成后运行一次，历史本地备份也会补写：
 
 ```powershell
-python recruitment_sync.py sync-original-resumes
+python src\recruitment_sync.py sync-original-resumes --config config.json
 ```
 
 之后每次正常同步会自动完成原件上传和表格链接写入；原件上传失败仅会进入重试队列，不影响候选人入库或面试邀请。
