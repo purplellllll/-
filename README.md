@@ -2,6 +2,39 @@
 
 此本地程序同步候选人的 `序号、姓名、学号、邮箱、电话、专业、应聘组别、面试链接` 到飞书电子表格。每封 Gmail 邮件只会成功写入一次；本地 SQLite 会保存已处理的 Gmail message ID，避免定时任务重复写入。
 
+## 文件说明
+
+| 文件 | 用途 |
+| --- | --- |
+| `recruitment_sync.py` | 核心同步程序：读取 Gmail 简历、解析候选人信息、写入飞书表格、发送 Offer 邮件和审核卡片。 |
+| `interview_scheduler.py` | 面试调度程序：分配面试官、发送面试时间确认卡片、接收确认结果并回写表格。 |
+| `config.example.json` | 配置模板。复制为 `config.json` 后填写 Gmail、飞书和面试相关配置。 |
+| `requirements.txt` | Python 依赖列表。 |
+| `run.ps1` | 主入口，用于授权 Gmail、检查连接、同步简历和发送通知。 |
+| `install-schedule.ps1` | 安装定时同步任务。 |
+| `install-interview-listener.ps1` | 安装飞书面试卡片监听服务。 |
+| `install-interview-notice-schedule.ps1` | 安装面试通知扫描定时任务。 |
+| `run-hidden.vbs` | 隐藏窗口运行简历同步，供定时任务调用。 |
+| `run-interview-listener.ps1` | 启动飞书面试卡片监听服务。 |
+| `run-interview-listener-hidden.vbs` | 隐藏窗口启动面试监听服务。 |
+| `run-interview-notices-hidden.vbs` | 隐藏窗口启动面试通知扫描。 |
+| `authorize-gmail-hidden.vbs` | 隐藏窗口启动 Gmail 授权流程。 |
+| `.gitignore` | 防止配置密钥、OAuth 文件、候选人资料、数据库和日志被提交。 |
+| `README.md` | 项目说明、安装配置和使用方法。 |
+
+### 常用入口
+
+```powershell
+# 首次授权 Gmail
+powershell -ExecutionPolicy Bypass -File .\run.ps1 authorize-gmail
+
+# 检查 Gmail 和飞书连接
+powershell -ExecutionPolicy Bypass -File .\run.ps1 check
+
+# 执行一次简历同步
+powershell -ExecutionPolicy Bypass -File .\run.ps1 sync
+```
+
 ## 一次性配置
 
 1. 将 Google Cloud 下载的 **Desktop app** OAuth JSON 放到 `secrets/gmail-client.json`。
